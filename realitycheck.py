@@ -13,21 +13,28 @@ import sys
 import requests
 
 # Hardcoded dictionary of IPs with matching labels
-ip_dict={
+address_dict={
 "143.198.186.125":["dig","web","centos"],
 "157.230.30.0":["dig","gateway"]
 }
 
-# Sends the http request, returns the statuc code
+target="web"
+
+# Sends the http request, processes the status code
 def ring(door):
     r = requests.get("http://" + door)
-    return(r.status_code)
+    print("Send request to " + door)
+    if r.status_code >= 400:
+        print("%s is not reachable" % door)
+    else:
+        print("%s is reachable" % door)
 
 # Main
 if __name__ == "__main__":
-    for ip,types in ip_dict.items():
-        print("Send request to " + ip)
-        if ring(ip) != 200:
-            print("%s is not reachable" % ip)
-        else:
-            print("%s is reachable" % ip)
+    if target == "all":
+        for door,label in address_dict.items():
+            ring(door)
+    else:
+        for door,label in address_dict.items():
+            if target in label:
+                ring(door)
