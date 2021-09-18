@@ -14,24 +14,27 @@ import requests
 
 # Hardcoded dictionary of IPs with matching labels
 address_dict={
-"143.198.186.125":["dig","web","centos"],
-"157.230.30.0":["dig","gateway"]
+'159.65.63.221':['dig','web','ubuntu'],
+'157.230.30.0':['dig','web','stream']
 }
 
-target="web"
+target='ubuntu'
 
 # Sends the http request, processes the status code
 def ring(door):
-    r = requests.get("http://" + door)
-    print("Send request to " + door)
+    r = requests.get('http://' + door + ':666')
+    print('Send request to ' + door)
+    print(r.status_code)
     if r.status_code >= 400:
-        print("%s is not reachable" % door)
+        print('%s is not reachable' % door)
     else:
-        print("%s is reachable" % door)
+        print('%s is reachable' % door)
 
 # Main
-if __name__ == "__main__":
-    if target == "all":
+if __name__ == '__main__':
+    if not target:
+        print('no target given')
+    if target == 'all':
         for door,label in address_dict.items():
             ring(door)
     else:
