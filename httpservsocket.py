@@ -5,11 +5,14 @@
 
 import http.server
 import socketserver
+import os
 
 PORT = 666
+
+# change dir to serve the relative dir index.html file
+os.chdir('/root/realitycheck/')
 
 Handler = http.server.SimpleHTTPRequestHandler
 
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print("serving at port", PORT)
     httpd.serve_forever()

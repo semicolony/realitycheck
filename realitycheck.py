@@ -24,11 +24,11 @@ target='ubuntu'
 def ring(door):
     r = requests.get('http://' + door + ':666')
     print('Send request to ' + door)
-    print(r.status_code)
     if r.status_code >= 400:
         print('%s is not reachable' % door)
     else:
         print('%s is reachable' % door)
+        print(r.text)
 
 # Main
 if __name__ == '__main__':
