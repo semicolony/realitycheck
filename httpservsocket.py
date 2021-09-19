@@ -9,7 +9,7 @@ import os
 
 PORT = 666
 
-# change dir to serve the relative dir index.html file
+# change dir to serve the relative dir ./index.html file
 os.chdir('/root/realitycheck/')
 
 Handler = http.server.SimpleHTTPRequestHandler
