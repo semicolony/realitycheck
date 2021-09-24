@@ -14,8 +14,6 @@ import requests
 import http.server
 import socketserver
 import os
-import threading
-import logging
 
 # Hardcoded dictionary of IPs with matching labels
 address_dict={
