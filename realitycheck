@@ -14,12 +14,13 @@ import requests
 import http.server
 import socketserver
 import os
+import threading
+import logging
 
 # Hardcoded dictionary of IPs with matching labels
 address_dict={
 '159.65.63.221':['dig','web','ubuntu'],
-'157.230.30.0':['dig','web','stream'],
-'162.55.182.118':['htz','web','test']
+'157.230.30.0':['dig','web','stream']
 }
 
 ### preflight checks
@@ -42,7 +43,7 @@ def set_method():
 ### Server part
 # DOES NOT WORK YET
 def start_server():
-#    server_dir = '/root/realitycheck/'
+    server_dir = '/my/realitycheck/'
     port = 666
     handler = http.server.SimpleHTTPRequestHandler
     os.chdir(server_dir)
@@ -68,12 +69,9 @@ def ring(door):
 if __name__ == '__main__':
     set_method()
     if method == 'server':
-        print(f"starting the http listener on port 666") #debug
-        start_server
+        start_server()
     elif method == 'all':
-        print(f"looping over all targets") #debug
         for door,label in address_dict.items():
-            print(f"Send request to {door}:") #debug
             ring(door)
     else:
         for values in address_dict.values():
@@ -82,10 +80,8 @@ if __name__ == '__main__':
             else:
                 is_in = False
         if is_in:
-            print(f"looping over subset {method}") #debug
             for door,label in address_dict.items():
                 if method in label:
                     ring(door)
         else:
-            print(f"{method} is not a valid method")
             sys.exit(2)
