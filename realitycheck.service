@@ -3,7 +3,7 @@ Description=simple python http server to listen on port 666 for edge monitoring
 
 [Service]
 Type=Simple
-ExecStart=/usr/bin/python3 /usr/sbin/realitycheck_server
+ExecStart=/usr/bin/python3 /usr/sbin/realitycheck server
 
 [Install]
 WantedBy=multi-user.target
