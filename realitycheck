@@ -15,8 +15,20 @@ import http.server
 import socketserver
 import os
 
-
-
+### presets
+basedir = '/Users/Paul/Projects/realitycheck/'
+#basedir = '/my/realitycheck/'
+config = str(basedir + 'config') #debug
+server_dir = basedir
+port = 666
+### preflight checks
+def preflight_checks():
+    if len(sys.argv) > 2:
+        print(f"too many arguments given") #debug
+        sys.exit(2)
+    if not os.path.isfile(config):
+        print(f"Missing config file: {config}") #debug
+        sys.exit(2)
 ### sys.args handling
 def set_method():
     global method
@@ -32,13 +44,11 @@ def set_method():
 def read_config():
     global address_dict
     address_dict = {}
-    f = open('/Users/Paul/Projects/config', 'r')
+    f = open(config, 'r')
     for line in f:
         address_dict[(line.rstrip().split())[0]]=(line.rstrip().split())[1:]
 ### Server part
 def start_server():
-    server_dir = '/my/realitycheck/'
-    port = 666
     handler = http.server.SimpleHTTPRequestHandler
     os.chdir(server_dir)
     try:
@@ -47,7 +57,7 @@ def start_server():
     except:
         sys.exit(2)
 ### Client part
-def match_method(method):
+def find_target_ip(method):
     global target_ip
     target_ip = []
     if method == 'all':
@@ -71,15 +81,12 @@ def send_request(ip):
 
 # Main
 if __name__ == '__main__':
-    if len(sys.argv) > 2:
-        print(f"too many arguments given")
-        sys.exit(2)
+    preflight_checks()
     set_method()
     read_config()
     if method == 'server':
         start_server()
     else:
-        match_method(method)
-
+        find_target_ip(method)
     for ip in target_ip:
         send_request(ip)
