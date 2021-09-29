@@ -16,7 +16,6 @@ import socketserver
 import os
 
 ### presets
-<<<<<<< HEAD
 def set_global_vars():
     global basedir
     global config
@@ -26,12 +25,6 @@ def set_global_vars():
     config = str(basedir + 'config')
     server_dir = basedir
     port = 666
-=======
-basedir = '/my/realitycheck/'
-config = str(basedir + 'config')
-server_dir = basedir
-port = 666
->>>>>>> 1081f3b0f4591224063d54805ac0f9f4feb17182
 ### preflight checks
 def preflight_checks():
     if len(sys.argv) > 2:
