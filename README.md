@@ -1,8 +1,5 @@
-# Either loop over all IPs or loop only over a certain set
-# defined by the label argument passed from commandline.
-#
-# The loop runs a http request and the exit code is used to
-# decide if the host is reachable or not.
-#
-# The list if IPs is hardcoded in dict style with each matching
-# label as a value to the IP.
+Simple reachability monitoring - realitycheck
+
+Baseline functions:
+    Either run as minimalistic python3 http websocket, serving the index.html,
+    or checking this server function via a list of IPs with subset of labels.
