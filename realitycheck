@@ -16,9 +16,8 @@ import socketserver
 import os
 
 ### presets
-basedir = '/Users/Paul/Projects/realitycheck/'
-#basedir = '/my/realitycheck/'
-config = str(basedir + 'config') #debug
+basedir = '/my/realitycheck/'
+config = str(basedir + 'config')
 server_dir = basedir
 port = 666
 ### preflight checks
@@ -41,12 +40,12 @@ def set_method():
         else:
             method = str(arg)
 ### Reading config files
-def read_config():
+def make_address_dict():
     global address_dict
     address_dict = {}
     f = open(config, 'r')
     for line in f:
-        address_dict[(line.rstrip().split())[0]]=(line.rstrip().split())[1:]
+        address_dict[(line.rstrip().split())[0]] = (line.rstrip().split())[1:]
 ### Server part
 def start_server():
     handler = http.server.SimpleHTTPRequestHandler
@@ -83,7 +82,7 @@ def send_request(ip):
 if __name__ == '__main__':
     preflight_checks()
     set_method()
-    read_config()
+    make_address_dict()
     if method == 'server':
         start_server()
     else:
