@@ -17,14 +17,12 @@ import os
 
 # Hardcoded dictionary of IPs with matching labels
 address_dict={
-'159.65.63.221':['dig','web','ubuntu'],
-'157.230.30.0':['dig','web','stream']
+'159.65.63.221':['dig','one','ubuntu'],
+'157.230.30.0':['dig','two','stream'],
+'157.230.30.1':['dig','three','ubuntu']
 }
 
 ### preflight checks
-if len(sys.argv) > 2:
-    print(f"too many arguments given")
-    sys.exit(2)
 
 ### sys.args handling
 def set_method():
@@ -39,7 +37,6 @@ def set_method():
             method = str(arg)
 
 ### Server part
-# DOES NOT WORK YET
 def start_server():
     server_dir = '/my/realitycheck/'
     port = 666
@@ -52,34 +49,38 @@ def start_server():
         sys.exit(2)
 
 ### Client part
-def ring(door):
+def match_method(method):
+    global target_ip
+    target_ip = []
+    if method == 'all':
+        for ip in address_dict.keys():
+            target_ip.append(ip)
+    else:
+        for ip,label in address_dict.items():
+            if method in label:
+                target_ip.append(ip)
+
+def send_request(ip):
     try:
-        r = requests.get('http://' + door + ':666')
+        r = requests.get('http://' + ip + ':666', timeout=2)
         if r.status_code != 200:
             print(f"unexpected status code returned: {r.status_code}") #debug
         else:
-            print(f"{door} is reachbale") #debug
+            print(f"{ip} is reachbale") #debug
             print(f"index.html: {r.text.rstrip()}") #debug
     except:
-            print(f"server {door} not reachable") #debug
+            print(f"server {ip} not reachable") #debug
 
 # Main
 if __name__ == '__main__':
+    if len(sys.argv) > 2:
+        print(f"too many arguments given")
+        sys.exit(2)
     set_method()
     if method == 'server':
         start_server()
-    elif method == 'all':
-        for door,label in address_dict.items():
-            ring(door)
     else:
-        for values in address_dict.values():
-            if method in values:
-                is_in = True
-            else:
-                is_in = False
-        if is_in:
-            for door,label in address_dict.items():
-                if method in label:
-                    ring(door)
-        else:
-            sys.exit(2)
+        match_method(method)
+
+    for ip in target_ip:
+        send_request(ip)
