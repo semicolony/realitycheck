@@ -16,10 +16,15 @@ import socketserver
 import os
 
 ### presets
-basedir = '/my/realitycheck/'
-config = str(basedir + 'config')
-server_dir = basedir
-port = 666
+def set_global_vars():
+    global basedir
+    global config
+    global server_dir
+    global port
+    basedir = '/my/realitycheck/'
+    config = str(basedir + 'config')
+    server_dir = basedir
+    port = 666
 ### preflight checks
 def preflight_checks():
     if len(sys.argv) > 2:
@@ -80,6 +85,7 @@ def send_request(ip):
 
 # Main
 if __name__ == '__main__':
+    set_global_vars()
     preflight_checks()
     set_method()
     make_address_dict()
