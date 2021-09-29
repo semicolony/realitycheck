@@ -15,14 +15,7 @@ import http.server
 import socketserver
 import os
 
-# Hardcoded dictionary of IPs with matching labels
-address_dict={
-'159.65.63.221':['dig','one','ubuntu'],
-'157.230.30.0':['dig','two','stream'],
-'157.230.30.1':['dig','three','ubuntu']
-}
 
-### preflight checks
 
 ### sys.args handling
 def set_method():
@@ -35,7 +28,13 @@ def set_method():
             method = 'server'
         else:
             method = str(arg)
-
+### Reading config files
+def read_config():
+    global address_dict
+    address_dict = {}
+    f = open('/Users/Paul/Projects/config', 'r')
+    for line in f:
+        address_dict[(line.rstrip().split())[0]]=(line.rstrip().split())[1:]
 ### Server part
 def start_server():
     server_dir = '/my/realitycheck/'
@@ -47,7 +46,6 @@ def start_server():
             httpd.serve_forever()
     except:
         sys.exit(2)
-
 ### Client part
 def match_method(method):
     global target_ip
@@ -59,7 +57,7 @@ def match_method(method):
         for ip,label in address_dict.items():
             if method in label:
                 target_ip.append(ip)
-
+### Send the request, return index.html
 def send_request(ip):
     try:
         r = requests.get('http://' + ip + ':666', timeout=2)
@@ -77,6 +75,7 @@ if __name__ == '__main__':
         print(f"too many arguments given")
         sys.exit(2)
     set_method()
+    read_config()
     if method == 'server':
         start_server()
     else:
