@@ -1,3 +1,7 @@
+localhost self zero macos
 159.65.63.221 dig one ubuntu
 157.230.30.0 dig two stream
 157.230.30.1 dig three ubuntu
+redcloud1 internet four unknown
+1.2.3.4 internet five unknown
+redcloud2 internet six unknown
