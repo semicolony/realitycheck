@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+import os
+import sys
+import configparser
+
+def which_config():
+    realitycheck_cfg = str((os.path.split(os.getcwd())[0]) + '/lib/realitycheck.cfg')
+    if not os.path.isfile(str(realitycheck_cfg + '.defaults')):
+        if not os.path.isfile(realitycheck_cfg):
+            print(f"config file is missing -> {realitycheck_cfg}")
+            sys.exit(2)
+        else:
+            print(f"set variables to defaults")
+            return
+        #    set_variables(defaults)
+    print(f"set variables to custom")
+
+def main():
+    which_config()
+
+if __name__ == '__main__':
+    main()
