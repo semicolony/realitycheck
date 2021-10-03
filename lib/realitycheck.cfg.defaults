@@ -1,0 +1,8 @@
+[DEFAULT]
+basedir = '/my/realitycheck/'
+config = str(basedir + 'lib/config')
+server_dir = basedir
+port = 666
+
+[CUSTOM]
+#port =
