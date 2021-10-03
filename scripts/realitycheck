@@ -10,7 +10,7 @@ from multiprocessing import Pool
 ### presets
 #basedir = '/my/realitycheck/'
 basedir = '/Users/Paul/Projects/realitycheck/'
-config = str(basedir + 'config')
+config = str(basedir + 'lib/config')
 server_dir = basedir
 port = 666
 ### preflight checks
