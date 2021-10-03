@@ -8,16 +8,11 @@ import os
 from multiprocessing import Pool
 
 ### presets
-def set_global_vars():
-    global basedir
-    global config
-    global server_dir
-    global port
-#    basedir = '/my/realitycheck/'
-    basedir = '/Users/Paul/Projects/realitycheck/'
-    config = str(basedir + 'config')
-    server_dir = basedir
-    port = 666
+#basedir = '/my/realitycheck/'
+basedir = '/Users/Paul/Projects/realitycheck/'
+config = str(basedir + 'config')
+server_dir = basedir
+port = 666
 ### preflight checks
 def preflight_checks():
     if len(sys.argv) > 2:
@@ -37,7 +32,7 @@ def set_method():
             method = 'server'
         else:
             method = str(arg)
-### Reading config files
+### make target dictionary
 def make_address_dict():
     global address_dict
     address_dict = {}
@@ -67,7 +62,7 @@ def find_target_ips(method):
 ### Send the request, return index.html
 def send_request(ip):
     try:
-        r = requests.get('http://' + ip + ':666', timeout=1)
+        r = requests.get('http://' + ip + ':' + str(port), timeout=1)
         if r.status_code != 200:
             print(f"unexpected status code returned: {r.status_code}") #debug
         else:
@@ -75,6 +70,7 @@ def send_request(ip):
             print(f"index.html: {r.text.rstrip()}") #debug
     except:
         print(f"server {ip} not reachable") #debug
+### Prevent thread overflow
 def build_thread_controll():
     if len(target_ips) > 2:
         thread_control = 5
@@ -84,7 +80,6 @@ def build_thread_controll():
 
 ### Main
 def main():
-    set_global_vars()
     preflight_checks()
     set_method()
     make_address_dict()
