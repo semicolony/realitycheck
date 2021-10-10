@@ -54,6 +54,7 @@ def make_address_dict():
             address_dict[(line.rstrip().split())[0]] = (line.rstrip().split())[1:]
     except:
         print(f"Error: {addresses} does not exist")
+        print(f"Error: {addresses} does not exist, inside make_address_dict()")
         sys.exit(2)
 ### launch local server
 def start_server():
@@ -63,6 +64,7 @@ def start_server():
         with socketserver.TCPServer(("", globalconfig['port']), handler) as httpd:
             httpd.serve_forever()
     except:
+        print(f"Error: Socket could not be initiated, inside start_server()")
         sys.exit(2)
 ### define actual targets
 def find_target_ips(method):
