@@ -32,7 +32,7 @@ def return_config_for(*vars):
         print(f"Error: {vars} is not configured in {configfile}") #debug
         sys.exit(2)
     return conf_dict
-### sys.args handling
+### start server or parse client checks
 def set_method():
     global method
     if len(sys.argv[1:]) == 0:
@@ -55,7 +55,7 @@ def make_address_dict():
     except:
         print(f"Error: {addresses} does not exist")
         sys.exit(2)
-### Server part
+### launch local server
 def start_server():
     handler = http.server.SimpleHTTPRequestHandler
     os.chdir(globalconfig['server_dir'])
@@ -64,7 +64,7 @@ def start_server():
             httpd.serve_forever()
     except:
         sys.exit(2)
-### Client part
+### define actual targets
 def find_target_ips(method):
     global target_ips
     target_ips = []
@@ -75,7 +75,7 @@ def find_target_ips(method):
         for ip,label in address_dict.items():
             if method in label:
                 target_ips.append(ip)
-### Send the request, return index.html
+### send the request, return index.html
 def send_request(ip):
     try:
         r = requests.get('http://' + ip + ':' + return_config_for('port')['port'], timeout=1)
@@ -86,7 +86,7 @@ def send_request(ip):
             print(f"index.html: {r.text.rstrip()}") #debug
     except:
         print(f"server {ip} not reachable") #debug
-### Prevent thread overflow
+### prevent thread overflow
 def build_thread_controll():
     if len(target_ips) > 2:
         thread_control = 5
@@ -94,7 +94,7 @@ def build_thread_controll():
         thread_control = 1
     return thread_control
 
-### Main
+### main
 def main():
     preflight_checks()
     set_method()
