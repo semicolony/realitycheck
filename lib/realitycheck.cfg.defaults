@@ -1,8 +1,11 @@
 [DEFAULT]
-basedir = '/my/realitycheck/'
-config = str(basedir + 'lib/config')
-server_dir = basedir
+base_dir = /my/realitycheck/
+server_dir = /my/realitycheck/server/
+addresses = /my/realitycheck/lib/addresses
 port = 666
 
 [CUSTOM]
+#base_dir =
+#server_dir =
+#addresses =
 #port =
