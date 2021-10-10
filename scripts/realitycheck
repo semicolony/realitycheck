@@ -11,7 +11,7 @@ from multiprocessing import Pool
 ### preflight checks
 def preflight_checks():
     if len(sys.argv) > 2:
-        print(f"too many arguments given") #debug
+        print(f"too many arguments given, inside preflight_checks()") #debug
         sys.exit(2)
 ### parse config
 def return_config_for(*vars):
@@ -20,7 +20,7 @@ def return_config_for(*vars):
     if not os.path.isfile(configfile):
         configfile = defaults
         if not os.path.isfile(configfile):
-            print(f"Error: {configfile} does not exist")
+            print(f"Error: {configfile} does not exist, inside return_config_for()")
             sys.exit(2)
     conf_dict = {}
     config = configparser.ConfigParser()
@@ -29,7 +29,7 @@ def return_config_for(*vars):
         for var in vars:
             conf_dict[var] = config['CUSTOM'][var]
     except:
-        print(f"Error: {vars} is not configured in {configfile}") #debug
+        print(f"Error: {vars} is not configured in {configfile}, inside return_config_for()")
         sys.exit(2)
     return conf_dict
 ### start server or parse client checks
@@ -98,10 +98,10 @@ def build_thread_controll():
 def main():
     preflight_checks()
     set_method()
-    make_address_dict()
     if method == 'server':
         start_server()
     else:
+        make_address_dict()
         find_target_ips(method)
     with Pool(build_thread_controll()) as p:
         p.map(send_request, target_ips)
