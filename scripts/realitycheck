@@ -5,22 +5,30 @@ import requests
 import http.server
 import socketserver
 import os
+import configparser
 from multiprocessing import Pool
 
-### presets
-#basedir = '/my/realitycheck/'
-basedir = '/Users/Paul/Projects/realitycheck/'
-config = str(basedir + 'lib/config')
-server_dir = basedir
-port = 666
 ### preflight checks
 def preflight_checks():
     if len(sys.argv) > 2:
         print(f"too many arguments given") #debug
         sys.exit(2)
-    if not os.path.isfile(config):
-        print(f"Missing config file: {config}") #debug
+### parse config
+def return_config_for(*vars):
+    configfile = os.path.dirname(os.getcwd()) + '/lib/realitycheck.cfg'
+    if not os.path.isfile(configfile):
+        print(f"Error: {configfile} does not exist")
         sys.exit(2)
+    conf_dict = {}
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    try:
+        for var in vars:
+            conf_dict[var] = config['CUSTOM'][var]
+    except:
+        print(f"Error: {vars} is not configured in {configfile}") #debug
+        sys.exit(2)
+    return conf_dict
 ### sys.args handling
 def set_method():
     global method
@@ -36,15 +44,15 @@ def set_method():
 def make_address_dict():
     global address_dict
     address_dict = {}
-    f = open(config, 'r')
+    f = open(return_config_for('addresses')['addresses'], 'r')
     for line in f:
         address_dict[(line.rstrip().split())[0]] = (line.rstrip().split())[1:]
 ### Server part
 def start_server():
     handler = http.server.SimpleHTTPRequestHandler
-    os.chdir(server_dir)
+    os.chdir(globalconfig['server_dir'])
     try:
-        with socketserver.TCPServer(("", port), handler) as httpd:
+        with socketserver.TCPServer(("", globalconfig['port']), handler) as httpd:
             httpd.serve_forever()
     except:
         sys.exit(2)
@@ -62,7 +70,7 @@ def find_target_ips(method):
 ### Send the request, return index.html
 def send_request(ip):
     try:
-        r = requests.get('http://' + ip + ':' + str(port), timeout=1)
+        r = requests.get('http://' + ip + ':' + return_config_for('port')['port'], timeout=1)
         if r.status_code != 200:
             print(f"unexpected status code returned: {r.status_code}") #debug
         else:
