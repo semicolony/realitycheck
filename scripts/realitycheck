@@ -16,9 +16,12 @@ def preflight_checks():
 ### parse config
 def return_config_for(*vars):
     configfile = os.path.dirname(os.getcwd()) + '/lib/realitycheck.cfg'
+    defaults = os.path.dirname(os.getcwd()) + '/lib/realitycheck.cfg.defaults'
     if not os.path.isfile(configfile):
-        print(f"Error: {configfile} does not exist")
-        sys.exit(2)
+        configfile = defaults
+        if not os.path.isfile(configfile):
+            print(f"Error: {configfile} does not exist")
+            sys.exit(2)
     conf_dict = {}
     config = configparser.ConfigParser()
     config.read(configfile)
@@ -44,9 +47,14 @@ def set_method():
 def make_address_dict():
     global address_dict
     address_dict = {}
-    f = open(return_config_for('addresses')['addresses'], 'r')
-    for line in f:
-        address_dict[(line.rstrip().split())[0]] = (line.rstrip().split())[1:]
+    addresses = return_config_for('addresses')['addresses']
+    try:
+        f = open(addresses, 'r')
+        for line in f:
+            address_dict[(line.rstrip().split())[0]] = (line.rstrip().split())[1:]
+    except:
+        print(f"Error: {addresses} does not exist")
+        sys.exit(2)
 ### Server part
 def start_server():
     handler = http.server.SimpleHTTPRequestHandler
