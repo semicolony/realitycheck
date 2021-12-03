@@ -1,5 +1,90 @@
 #!/usr/bin/python3
 
+import os
+import argparse
+from sys import exit
+
+### setting vars
+def set_vars():
+    global cwd
+    global dwd
+    cwd = os.getcwd()
+    dwd = os.path.dirname(cwd)
+
+### warn/error func
+def _warning(input):
+    print(f"WARN: {input}")
+
+def _error(input):
+    print(f"ERROR: {input}")
+    exit(1)
+
+### parse the arguments
+def parse_arguments():
+    global METHOD
+    global TARGETS
+    global OPTIONS
+    parser = argparse.ArgumentParser(description = "Query for mysql grants.")
+    parser.add_argument(
+            "-m",
+            type=str,
+            required=True,
+            help="set method, either server or check [required]"
+    )
+    parser.add_argument(
+            "-o",
+            type=str,
+            nargs="+",
+            help="set any options"
+    )
+    args = parser.parse_args()
+    if args.m in "check":
+        parser.add_argument(
+                "-t",
+                type=str,
+                nargs="+",
+                required=True,
+                help="set targets, either single host or group [required]"
+        )
+    else:
+        parser.add_argument(
+                "-t",
+                type=str,
+                nargs="+",
+                help="set targets, either single host or group"
+        )
+    args = parser.parse_args()
+    METHOD = args.m
+    TARGETS = args.t
+    OPTIONS = args.o
+
+### read the config file
+def read_configfile():
+    global running_conf
+    cwd = os.getcwd()
+    local_conf = str(cwd) + '/lib/realitycheck.cfg'
+    default_conf = '/etc/realitycheck/realitycheck.cfg'
+    if os.path.isfile(local_conf):
+        running_conf = local_conf
+    elif os.path.isfile(default_conf):
+        running_conf = default_conf
+    else:
+        _error(f"No config found")
+    print(f"{running_conf} will be used")
+
+### build the listener
+### start the listener
+# OR
+### build the target dictionary
+### send requests
+### store request replies
+
+### thread control
+
+def main():
+    parse_arguments()
+    set_vars()
+    read_configfile()
 
 ###
 if __name__ == '__main__':
