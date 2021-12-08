@@ -29,13 +29,15 @@ def parse_arguments():
             "-m",
             type=str,
             required=True,
-            help="set method, either server or check [required]"
+            help="set method, either server or check [required]",
+            metavar='[server|check]'
     )
     parser.add_argument(
             "-o",
             type=str,
             nargs="+",
-            help="set any options"
+            help="set any options (none defined yet)",
+            metavar=''
     )
     args = parser.parse_args()
     if args.m in "check":
