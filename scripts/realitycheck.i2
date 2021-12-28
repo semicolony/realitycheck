@@ -15,8 +15,10 @@ def set_vars():
 def _warning(input):
     print(f"WARN: {input}")
 
-def _error(input):
+def _error(input,err):
     print(f"ERROR: {input}")
+    if err:
+        print(f"Exception: {err}")
     exit(1)
 
 ### parse the arguments
