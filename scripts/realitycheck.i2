@@ -2,16 +2,21 @@
 
 import os
 import argparse
+from configparser import ConfigParser as configparser
 from sys import exit, argv
 
 ### setting vars
 def set_vars():
-    global self
-    global cwd
-    global dwd
-    cwd = os.getcwd()
-    dwd = os.path.dirname(cwd)
-    self = argv[0]
+    global _self
+    global _cwd
+    global _dwd
+    global _default_conf
+    global _conf
+    _cwd = str(os.getcwd())
+    _dwd = str(os.path.dirname(_cwd))
+    _self = argv[0]
+    _default_conf = '/etc/realitycheck/realitycheck.cfg'
+    _conf = _cwd + '/lib/realitycheck.cfg'
 
 ### warn/error func
 def _warning(input):
@@ -29,7 +34,7 @@ def parse_arguments():
     global TARGETS
     global OPTIONS
     global SHOW
-    parser = argparse.ArgumentParser(description = "Usage for " + self)
+    parser = argparse.ArgumentParser(description = "Usage for " + _self)
     parser.add_argument(
             "-m",
             help="set method, either server or check",
@@ -61,16 +66,20 @@ def parse_arguments():
 ### read the config file
 def read_configfile():
     global running_conf
-    cwd = os.getcwd()
-    local_conf = str(cwd) + '/lib/realitycheck.cfg'
-    default_conf = '/etc/realitycheck/realitycheck.cfg'
-    if os.path.isfile(local_conf):
-        running_conf = local_conf
-    elif os.path.isfile(default_conf):
-        running_conf = default_conf
-    else:
-        _error(f"No config found", None)
-    print(f"{running_conf} will be used")
+    from_conf = {}
+    try:
+        if os.access(_conf, os.R_OK):
+            running_conf = _conf
+            config = configparser()
+            config.read(_conf)
+            print(config['CUSTOM']['port'])
+            print(f"reached")
+        elif os.access(_default_conf, os.R_OK):
+            running_conf = _default_conf
+    except Exception as err:
+        _error(f"Problem reading config file.", err)
+#    print(f"{running_conf} will be used") #debug
+
 
 ### show config file variables
 def show_config():
@@ -78,6 +87,8 @@ def show_config():
     exit(0)
 
 ### build the listener
+def build_serverside(port):
+    print(f"build the server, listening on input port")
 ### start the listener
 # OR
 ### build the target dictionary
